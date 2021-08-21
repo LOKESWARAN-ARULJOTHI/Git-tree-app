@@ -13,6 +13,7 @@ load_dotenv()
 def index(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
+        # print(body_unicode)
         body = json.loads(body_unicode)
         repourl = body['repourl']
         link_in_parts = list(map(str, repourl.strip().split('/')))
