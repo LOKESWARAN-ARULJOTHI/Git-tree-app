@@ -5,13 +5,17 @@ import requests as r
 import os
 from dotenv import load_dotenv
 from random import shuffle
+from django.views.decorators.csrf import ensure_csrf_cookie
+import json
 
 load_dotenv()
 # Create your views here.
 def index(request):
     if request.method == 'POST':
-        print(request.method)
-        link_in_parts = list(map(str, request.POST['repourl'].strip().split('/')))
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        repourl = body['repourl']
+        link_in_parts = list(map(str, repourl.strip().split('/')))
         github_index = None
         for i in range(len(link_in_parts)):
             if link_in_parts[i] == "github.com":
@@ -24,7 +28,7 @@ def index(request):
         # print(files_list)
         routes = create_Node(files_list)
         request.session['routes'] = routes
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponse(json.dumps(routes), content_type="application/json")
     elif request.method == "GET":
         print(request.method)
         routes = request.session.get('routes',False)
