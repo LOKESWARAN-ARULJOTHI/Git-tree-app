@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Tree</title>
+</head>
+<style>
+    pre{
+        margin:0;
+    }
+    section{
+        margin: 50px 100px;
+    }
+</style>
+<body>
+    <h1>Welcome to Git Tree</h1>
+    <form action="/" method="POST">
+        {% csrf_token %} 
+        <div>
+            <label for="repourl">Enter the repository URL:</label>
+            <input type="url" name="repourl" id="repourl" required autofocus>
+        </div>
+        <button>Get Tree</button>
+    </form>
+    <section>
+        {% if routes %}
+        ```
+        {% for route in routes %}
+        <pre><code>{{route}}</code></pre>
+        {% endfor %}
+        ```
+        {% endif %}
+    </section>
+</body>
+</html>

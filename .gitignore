@@ -1,0 +1,5 @@
+gittree/.env
+gittree/__pycache__
+dirtree/.env
+dirtree/__pycache__
+dirtree/migrations
