@@ -10,6 +10,7 @@ import json
 
 load_dotenv()
 # Create your views here.
+@ensure_csrf_cookie
 def index(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
