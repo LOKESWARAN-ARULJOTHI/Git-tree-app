@@ -9,7 +9,6 @@ from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-no_of_trees_generated = 0
 load_dotenv()
 
 # Class based view for Home page
@@ -43,12 +42,12 @@ class Home(View):
 
 # number-of-trees-generated urlpattern response function  
 def no_of_trees(request):
-    trees_generated = Number_of_trees_generated.objects.get(id=2)
+    trees_generated = Number_of_trees_generated.objects.get(id=1)
     return HttpResponse(trees_generated)
     
 # increments the no of trees generated field in DB
 def increment_notg():
-    notg = Number_of_trees_generated.objects.get(id=2)
+    notg = Number_of_trees_generated.objects.get(id=1)
     notg.notg += 1
     notg.save()
     

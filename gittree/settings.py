@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '0.0.0.0',
-    'gittree-test.herokuapp.com',
+    'gittree.herokuapp.com',
     'localhost'
 ]
 
@@ -84,10 +84,17 @@ WSGI_APPLICATION = 'gittree.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd1av18rt5k8b0g',
+        'HOST':'ec2-54-211-160-34.compute-1.amazonaws.com',
+        'PORT':5432,
+        'USER':'vyrfmnafvezein',
+        'PASSWORD':'17ccd5325b411939407e30560458f60cbb37beab4f69c026dfe9a0f8e6f1165e'
     }
 }
+
+# Database URL
+# postgres://vyrfmnafvezein:17ccd5325b411939407e30560458f60cbb37beab4f69c026dfe9a0f8e6f1165e@ec2-54-211-160-34.compute-1.amazonaws.com:5432/d1av18rt5k8b0g
 
 
 # Password validation
