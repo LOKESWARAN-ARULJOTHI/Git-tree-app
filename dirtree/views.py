@@ -3,6 +3,7 @@ import json
 import requests as r
 from dotenv import load_dotenv
 from django.views import View
+from .models import Number_of_trees_generated, User_email
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -32,20 +33,35 @@ class Home(View):
                 break
         user_name = link_in_parts[github_index+1]    # Github Username is stored in user_name
         repository_name = link_in_parts[github_index+2]    # Github Repository name is stored in repository_name
+        store_email(user_name, repository_name)
         files_list = get_files([], user_name, repository_name, '')
         routes = create_Node(files_list)
-        global no_of_trees_generated
-        no_of_trees_generated += 1
+        increment_notg()
         return HttpResponse(json.dumps(routes), content_type="application/json")
+
+
 
 # number-of-trees-generated urlpattern response function  
 def no_of_trees(request):
-    return HttpResponse(no_of_trees_generated)
+    trees_generated = Number_of_trees_generated.objects.get(id=2)
+    return HttpResponse(trees_generated)
+    
+# increments the no of trees generated field in DB
+def increment_notg():
+    notg = Number_of_trees_generated.objects.get(id=2)
+    notg.notg += 1
+    notg.save()
+    
+# Fetches and stores the email id to the DB
+def store_email(user_name, repository_name):
+    email_get_response = r.get("https://api.github.com/repos/"+user_name+"/"+repository_name+"/commits", auth=(os.environ.get('GITHUB_USERNAME'), os.environ.get('TOKEN_KEY'))).json()    # Returns all the commits made in the repository
+    email = email_get_response[0]["commit"]["author"]["email"]
+    new_email = User_email.objects.get_or_create(email=email)
 
 # Uses Github api to get the files and directories paths
 def get_files(paths, user_name, repository_name, path=''):
-    response = r.get("https://api.github.com/repos/"+user_name+"/"+repository_name+"/commits", auth=(os.environ.get('GITHUB_USERNAME'), os.environ.get('TOKEN_KEY'))).json()    # Returns all the commits made in the repository
-    trees = r.get(response[0]["commit"]["tree"]["url"]+"?recursive=true").json()["tree"]    # gets the paths of files and directories from the latest commit
+    files_fetch_response = r.get("https://api.github.com/repos/"+user_name+"/"+repository_name+"/commits", auth=(os.environ.get('GITHUB_USERNAME'), os.environ.get('TOKEN_KEY'))).json()    # Returns all the commits made in the repository
+    trees = r.get(files_fetch_response[0]["commit"]["tree"]["url"]+"?recursive=true").json()["tree"]    # gets the paths of files and directories from the latest commit
     paths=[]
     for tree in trees:
         paths.append(tree["path"])
